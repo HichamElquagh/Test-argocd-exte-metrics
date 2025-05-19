@@ -1,8 +1,7 @@
-# fichier: nginx-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: nginx-with-metrics
   labels:
     app: nginx
 spec:
@@ -20,3 +19,9 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+      - name: metrics-exporter
+        image: nginx/nginx-prometheus-exporter:latest
+        args:
+          - "-nginx.scrape-uri=http://localhost:80/stub_status"
+        ports:
+        - containerPort: 9113
